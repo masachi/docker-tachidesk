@@ -1,4 +1,7 @@
 #!/bin/sh
+echo "traefik starting"
+exec nohup traefik --configFile=/home/suwayomi/startup/traefik.yml > /home/suwayomi/traefik.log 2>&1 &
+echo "traefik started"
 if [ ! -f /home/suwayomi/.local/share/Tachidesk/docker_touchfile ]; then
 	touch /home/suwayomi/.local/share/Tachidesk/docker_touchfile
 	curl -s --create-dirs -L https://raw.githubusercontent.com/Suwayomi/docker-tachidesk/main/server.conf -o /home/suwayomi/.local/share/Tachidesk/server.conf;

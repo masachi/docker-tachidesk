@@ -1,0 +1,44 @@
+## STATIC CONFIGURATION
+log:
+  level: INFO
+
+api:
+  insecure: true
+  dashboard: false
+
+entryPoints:
+  web:
+    address: ":8091"
+
+providers:
+  file:
+    filename: "/home/suwayomi/startup/traefik.yml"
+
+## DYNAMIC CONFIGURATION
+http:
+  routers:
+    route-to-local-ip:
+      rule: "Host(`tachiyomi.cv3sarato.ga`, `tachiyomi.fly.dev`)"
+      service: tachiyomi
+      priority: 1000
+      middlewares:
+        - authentication
+        - compress
+      entryPoints:
+        - web
+
+  services:
+    tachiyomi:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1:4567"
+
+  middlewares:
+    authentication:
+      basicAuth:
+        users:
+          - "masachi:$2y$10$4KwW1JUHvwtOGXL.0Oxu8OPVKA9/Ej3y99lS3aKueuDfyzd9LDssO"
+          - "mugun:$2y$10$kB8LLrU/4jHWwE71sQTtw.Jt5mmSXoDKaHkILERalAVIQdf/Tukc2"
+          - "lqisa:$2y$10$u5dQDmBEGNvwBSVsjoqsJO0HqSWRkAIrD4Nd8PiFgLYBB0maFiA2i"
+    compress:
+      compress: {}
